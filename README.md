@@ -12,11 +12,6 @@
 >
 > 🧠 Ask plain questions like *“vegetation monitoring in Crete, June 2020”* → get relevant datasets and spectral bands.
 >
-> 🔧 Includes scripts to:
-> - Scrape and convert GEE catalogue pages to Markdown
-> - Analyze token counts for LLM embedding limits
-> - Build a semantic search agent using RAG + pgvector + OpenAI embeddings
->
 > Perfect for researchers and students who don’t want to dig through obscure dataset names.
 
 ---
@@ -161,7 +156,7 @@ This is usefule to ensure that the dataset pages fit within the context limits o
 
 ## 3. Building the Agent (in Gendox)
 
-1. **Create a new project** and upload the entire `resources/markdown/` folder as the project Knowledge Base**.  
+1. **Create a new project** and upload the entire `resources/markdown/` folder as the project Knowledge Base.  
 2. In the project Settings *Click “Start Training”* – Gendox will use:
 
    | Component | Purpose |

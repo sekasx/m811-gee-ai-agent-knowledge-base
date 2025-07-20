@@ -1,0 +1,16 @@
+name: M811-GEE-AI-Agent-Knowledge-Base
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.12
+  - pip
+  - click
+  - beautifulsoup4
+  - markdownify
+  - pytest
+  - lxml
+  - pandoc
+  - pip
+  - requests
+  - tiktoken

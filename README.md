@@ -147,19 +147,44 @@ Stats for bottom 99% of files (723 files):
 ```
 
 This is usefule to ensure that the dataset pages fit within the context limits of your LLM/Embedding models (e.g., text-embedding-3-small has a 8K token limit).
+
 ---
 
 ## 3. Building the Agent (in Gendox)
 
-1. **Create a new Knowledge Base** and upload `resources/markdown/`
-2. **Enable semantic indexing**
-3. **Create a new Agent**, link it to the KB, and use this prompt:
+1. **Create a new project** and upload the entire `resources/markdown/` folder as the project Knowledge Base**.  
+2. In the project Settings *Click “Start Training”* – Gendox will use:
 
-   > You are a remote-sensing expert. Ask clarifying questions when a user query is vague, then recommend suitable Google Earth Engine datasets and spectral bands.
+   | Component | Purpose |
+    |-----------|---------|
+   | **PostgreSQL 16 + pgvector** | Stores dense embeddings and powers fast nearest‑neighbour search. |
+   | **OpenAI Embeddings v3 small** | Transforms every dataset chunk into a 1 × 1536‑dimensional vector. |
+   | **Chunking** | Each Markdown file becomes **one section** (≤ 8 000 tokens) that contains the dataset description, band list, terms of use, and GEE code sample. |
 
-4. **Publish the Agent** and share the URL with students and researchers.
+
+3. Setup the **Agent**.  
+   Use this *System Prompt*:
+
+   > You are a remote‑sensing expert. Ask clarifying questions when a user query is vague, then recommend suitable Google Earth Engine datasets and spectral bands.
+
+4. **Publish the Agent** and chat with it.
 
 ---
+
+### Under the hood: hybrid semantic search
+
+| Phase | What happens |
+|-------|--------------|
+| **1. HyDE query synthesis** | When a user asks a question, the LLM first **hallucinates** an ideal answer *without external context* (Hypothetical Document Embeddings, aka HyDE). It then distills that answer into a tightly‑focused search query (e.g. “10 m NIR imagery winter 2019–2020 Greece”). |
+| **2. Embedding + k‑NN** | The search query is embedded with the same OpenAI v3 model. Gendox performs a k‑nearest‑neighbour lookup (Euclidean/L2 distance) in the pgvector index of all dataset sections. |
+| **3. Retrieval** | The top‑*N* matching dataset chunks (title + band list + description) are returned. |
+| **4. RAG completion** | Chat history + user question + Agent prompt + the retrieved chunks are fed back into the LLM, which generates a grounded answer that cites only the supplied context. |
+
+This pipeline lets users ask very broad or incomplete questions (e.g.  
+“Need images to monitor vineyard stress in Crete last June”) and still receive precise dataset + band recommendations.
+
+---
+
 
 ## 4. Getting‑Started Examples
 
@@ -171,7 +196,37 @@ This is usefule to ensure that the dataset pages fit within the context limits o
 
 ---
 
-## 5. How to Cite
+## 5. Results
+
+A list of questions created and compared across the Gendox AI Agent and models like ChatGPT.
+The questions results show that while ChatGPT can answer some questions with very good quality, since it does not have access to the GEE dataset, it prefers to propose widely used satellites and datasets. 
+It misses composite products that have been created from multiple datasets, such as the `NASA/LANCE/SNPP_VIIRS/C2` or `JAXA/GCOM-C/L3/LAND/LAI/V3`.
+
+Here are example questions and answers from the Gendox AI Agent:
+1. NDVI
+![Q1 - ndvi.png](resources/images/readme/Q1%20-%20ndvi.png)
+
+
+2. NDVI - Sentinel 2
+![Q2 - ndvi - sentinel-2.png](resources/images/readme/Q2%20-%20ndvi%20-%20sentinel-2.png)
+
+
+3. DEM
+![Q3 - DEM.png](resources/images/readme/Q3%20-%20DEM.png)
+
+
+4. Soil Moisture
+![Q4 - soil moisture.png](resources/images/readme/Q4%20-%20soil%20moisture.png)
+
+
+5. Flowering season
+![Q5 - flowering season.png](resources/images/readme/Q5%20-%20flowering%20season.png)
+
+
+
+---
+
+## 6. How to Cite
 
 > **Chris Sekas** (2025). *M811‑GEE‑AI‑Agent‑Knowledge‑Base: Preparing Google Earth Engine datasets for natural-language search.* GitHub repository, MIT License. https://github.com/your-org/M811-GEE-AI-Agent-Knowledge-Base
 

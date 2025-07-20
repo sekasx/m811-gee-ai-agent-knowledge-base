@@ -6,9 +6,18 @@
 
 ---
 
-## TL;DR
-
-A repo that **scrapes every dataset page from Google Earth Engine, converts them to Markdown, and packages them so an AI agent (built with [Gendox](https://gendox.dev/)) can answer natural‑language questions like “Which sensors give 10m NIR coverage over Greece in winter 2019‑2020?”—plus a handful of tiny helper scripts for quickly exploring dataset availability and token sizes.
+> **TL;DR**  
+> Google Earth Engine (GEE) hosts 730+ datasets, but its search is name-based and unintuitive.  
+> This project builds an **AI agent** using [Gendox](https://github.com/ctrl-space-labs/gendox-core) that enables **natural-language search** over GEE datasets.
+>
+> 🧠 Ask plain questions like *“vegetation monitoring in Crete, June 2020”* → get relevant datasets and spectral bands.
+>
+> 🔧 Includes scripts to:
+> - Scrape and convert GEE catalogue pages to Markdown
+> - Analyze token counts for LLM embedding limits
+> - Build a semantic search agent using RAG + pgvector + OpenAI embeddings
+>
+> Perfect for researchers and students who don’t want to dig through obscure dataset names.
 
 ---
 
@@ -185,23 +194,21 @@ This pipeline lets users ask very broad or incomplete questions (e.g.
 
 ---
 
-
-## 4. Getting‑Started Examples
-
-| Script                          | Purpose                                      |
-|---------------------------------|----------------------------------------------|
-| `html-href-extraction.py`       | Extract dataset links from GEE catalogue     |
-| `url-to-md.py`                  | Convert dataset pages to Markdown (via API)  |
-| `md-token-stats.py`             | Analyze token usage per dataset              |
-
----
-
-## 5. Results
+## 4. Results
 
 A list of questions created and compared across the Gendox AI Agent and models like ChatGPT.
 The questions results show that while ChatGPT can answer some questions with very good quality, since it does not have access to the GEE dataset, it prefers to propose widely used satellites and datasets. 
 It misses composite products that have been created from multiple datasets, such as the `NASA/LANCE/SNPP_VIIRS/C2` or `JAXA/GCOM-C/L3/LAND/LAI/V3`.
 
+### Agent Configuration
+In the configuration of the agent we used:
+1. Embedding Models (For both semantic index creation and semantic search) -> `text-embedding-3-small`
+2. Advanced Search Model (HyDE) -> `gemini-2.0-flash`
+3. Retrieval -> `kNN` with `k=7`
+4. RAG Model -> `gemini-2.5-flash` with medium `thinking` effort
+
+
+### Examples 
 Here are example questions and answers from the Gendox AI Agent:
 1. NDVI
 ![Q1 - ndvi.png](resources/images/readme/Q1%20-%20ndvi.png)
@@ -226,7 +233,11 @@ Here are example questions and answers from the Gendox AI Agent:
 
 ---
 
-## 6. How to Cite
+## 5. Access & Citation
+
+To request access to the Gendox AI Agent, email: [contact@ctrlspace.dev](mailto:contact@ctrlspace.dev)
+
+If you use this project in your research or teaching, please cite it as:
 
 > **Chris Sekas** (2025). *M811‑GEE‑AI‑Agent‑Knowledge‑Base: Preparing Google Earth Engine datasets for natural-language search.* GitHub repository, MIT License. https://github.com/your-org/M811-GEE-AI-Agent-Knowledge-Base
 

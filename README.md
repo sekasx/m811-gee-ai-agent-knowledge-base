@@ -230,7 +230,7 @@ Here are example questions and answers from the Gendox AI Agent:
 
 ## 5. Access & Citation
 
-To request access to the Gendox AI Agent, email: [contact@ctrlspace.dev](mailto:contact@ctrlspace.dev)
+To request access to the Gendox AI Agent, email: [contact@gendox.dev](mailto:contact@gendox.dev)
 
 If you use this project in your research or teaching, please cite it as:
 
